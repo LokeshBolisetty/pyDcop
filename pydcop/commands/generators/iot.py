@@ -42,11 +42,14 @@ from typing import List, Tuple, Dict, Callable
 
 import networkx as nx
 from collections import defaultdict
+from pulp.apis.glpk_api import GLPK_CMD
 
 import yaml
 from pulp.constants import LpBinary, LpMinimize, LpStatusOptimal
 from pulp.pulp import LpVariable, LpProblem, lpSum, value, LpAffineExpression
-from pulp.solvers import GLPK_CMD
+#from pulp.solvers import GLPK_CMD
+import pulp 
+GLPK_CMD = pulp.getSolver('GLPK_CMD')
 
 from pydcop.algorithms import load_algorithm_module
 from pydcop.computations_graph.factor_graph import (
