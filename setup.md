@@ -32,3 +32,10 @@ But this format has changed and it now has to be replaced with
 
 # New additions
 graph_coloring.yaml has been added to test if the setup is working well or not. 
+
+# Errors Rectified
+After creating virtual environment when I try to 
+
+```pip install .```
+
+It started to give segmentation fault. The fix for this from what I know is to make sure that the interpreter of the terminal(in VSCode mostly) is the same as the virtual environment you are working with. 
