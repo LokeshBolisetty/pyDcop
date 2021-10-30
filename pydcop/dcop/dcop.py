@@ -44,7 +44,7 @@ class DCOP(object):
     A DCOP is a Constraints Optimization Problem distribution on a set of
     agents: agents send messages to each other to find a solution to the
     optimization problem.
-    A DCOP is traditionally represented as a tuple (V, D, C, A, \mu) where A
+    A DCOP is traditionally represented as a tuple (V, D, C, A, \mu) where V
     is a set of variables, D the set of the domain for these variables, C a set
     of constraints involving these variables, A a set of agents responsible
     for selecting the value of the variable and \mu is a mapping of the
@@ -161,7 +161,7 @@ class DCOP(object):
             name is the name of the constraint, as a string
             expr_str is a python expression as a string, that return the
             value of the constraint. names used in this expression must be
-            names of variables given in te third element of the tuple.
+            names of variables given in the third element of the tuple.
             variable can be an iterable of variable object or a dictionary of
             {name: variables}
 
