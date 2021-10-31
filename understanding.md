@@ -1,5 +1,23 @@
 # pydcop
 
+## utils
+### dcop_cli.py
+This is similar to git. When you do ```git commit```, git is the cli and commit is the command. Similarly, here pydcop is the cli and the arguments follow it. 
+```
+dcop_cli.py agent ... 
+pydcop agent ...
+```
+are identicaly
+The arguments are specific to each command. Some arguments like verbosity are common to all command, they are called global arguments. 
+The global arguments avaiable are
+```
+pydcop [--version] [--timeout <timeout>] [--verbosity <level>]
+       [--log <log_conf_file>]
+
+```
+Verbosity can take 0,1,2,3 where 0 implies print only errors and the output is yaml fomatted result of the command. Default value is 0. 
+
+Additionally --help/-h can always be used as both global and local argument. 
 ## Graphs
 There are three types of graphs in PyDCOP. They are
 1. Factor graph
