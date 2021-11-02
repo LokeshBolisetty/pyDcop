@@ -109,7 +109,7 @@ algo specifies which algorithm to take eg: MGM DPOP etc
 
 algo_params are the optional paramters that can be sent to the algorithm. They are sent as "name:value" string
 
-distribution selects the distribution required.. By default it takes oneagent. 
+distribution selects the distribution required. By default it takes oneagent. 
 
 collect_on : When do you collect the metric? cycle_change or value_change or period
 
