@@ -31,7 +31,15 @@
 
 """
 This generator generates both a dcop and its initial distribution.
+usage: dcop_cli.py generate iot [-h] -d DOMAIN -n NUM [-r RANGE]
 
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DOMAIN, --domain DOMAIN
+                        domain of the variables domain: 0, 1, ..., d-1
+  -n NUM, --num NUM     number of variables in the graph
+  -r RANGE, --range RANGE
+                        range of the constraints values
 """
 
 
@@ -345,7 +353,7 @@ def distribute_factors(
     pb += lpSum([RATIO_HOST_COMM * comm, (1 - RATIO_HOST_COMM) * hosting])
 
     # solve using GLPK and convert to mapping { agt_name : [factors names]}
-    status = pb.solve(solver=GLPK_CMD(keepFiles=1, msg=False, options=["--pcost"]))
+    status = pb.solve(GLPK_CMD(keepFiles=1, msg=False, options=["--pcost"]))
     if status != LpStatusOptimal:
         raise ImpossibleDistributionException(
             "No possible optimal distribution for factors"

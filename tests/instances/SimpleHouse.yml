@@ -200,3 +200,33 @@ distribution_hints:
     mv_tv: [mc_tv]    
     mv_desk: [mc_desk]
     mv_entry: [mc_entry]
+
+# pydcop -v 0 -t 3 solve -a amaxsum -d adhoc ./tests/instances/SimpleHouse.yml
+# "assignment": {
+#     "l_d1": 0,
+#     "l_d2": 0,
+#     "l_e1": 0,
+#     "l_e2": 0,
+#     "l_k1": 0,
+#     "l_k2": 0,
+#     "l_k3": 0,
+#     "l_lv1": 0,
+#     "l_lv2": 0,
+#     "l_lv3": 0,
+#     "l_tv1": 0,
+#     "l_tv2": 0,
+#     "l_tv3": 0,
+#     "mv_desk": 4,
+#     "mv_entry": 4,
+#     "mv_kitchen": 4,
+#     "mv_livingroom": 0,
+#     "mv_stairs": 0,
+#     "mv_tv": 0
+#   },
+#   "cost": 3111.1237055049933,
+#   "cycle": 0,
+#   "msg_count": 145,
+#   "msg_size": 60,
+#   "status": "TIMEOUT",
+#   "time": 3.0158845859987196,
+#   "violation": 0

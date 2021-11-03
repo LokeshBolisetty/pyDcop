@@ -1,7 +1,10 @@
 name: simple secp 1
+#Smart environment configuration problem
 objective: min
 description: This is a very simple dcop modelling an secp with 3 light bulbs,
              1 models and one rule.
+
+#pydcop -v 0 -t 3 solve -a dsa -d adhoc ./tests/instances/secp_simple1.yaml
 
 domains:
   luminosity:
@@ -58,3 +61,67 @@ distribution_hints:
     al1: [l1]
     al2: [l2]
     al3: [l3]
+
+#Output with dsa
+# ^C{
+#   "agt_metrics": {
+#     "al1": {
+#       "activity_ratio": 0.19794799026842197,
+#       "count_ext_msg": {
+#         "_discovery_al1": 7,
+#         "l1": 3786
+#       },
+#       "cycles": {
+#         "l1": 1261
+#       },
+#       "size_ext_msg": {
+#         "_discovery_al1": 0,
+#         "l1": 3786
+#       }
+#     },
+#     "al2": {
+#       "activity_ratio": 0.4308595461425295,
+#       "count_ext_msg": {
+#         "_discovery_al2": 11,
+#         "l2": 2526,
+#         "m1": 2526
+#       },
+#       "cycles": {
+#         "l2": 1262,
+#         "m1": 1262
+#       },
+#       "size_ext_msg": {
+#         "_discovery_al2": 0,
+#         "l2": 2526,
+#         "m1": 2526
+#       }
+#     },
+#     "al3": {
+#       "activity_ratio": 0.19256240784793513,
+#       "count_ext_msg": {
+#         "_discovery_al3": 7,
+#         "l3": 3789
+#       },
+#       "cycles": {
+#         "l3": 1262
+#       },
+#       "size_ext_msg": {
+#         "_discovery_al3": 0,
+#         "l3": 3789
+#       }
+#     }
+#   },
+#   "assignment": {
+#     "l1": 3,
+#     "l2": 3,
+#     "l3": 3,
+#     "m1": 4
+#   },
+#   "cost": 14.2,
+#   "cycle": 1262,
+#   "msg_count": 12652,
+#   "msg_size": 12627,
+#   "status": "STOPPED",
+#   "time": 3.0018000220006797,
+#   "violation": 0
+# }

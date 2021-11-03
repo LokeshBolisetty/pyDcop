@@ -1,0 +1,10 @@
+cost: null
+distribution:
+  a_0:
+  - v_00_00
+  - v_00_01
+inputs:
+  algo: NA
+  dcop: meetingsExample.yaml
+  dist_algo: peav
+  graph: constraints_graph
