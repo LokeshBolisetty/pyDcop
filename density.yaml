@@ -1,0 +1,146 @@
+
+# DCOP name is mandatory.
+name: 'Density based IoT optimization'
+# The desciption is optional and can span several lines if needed
+description: |
+  There can be multiple access points in an IoT system. 
+  When a new device enters the system, it comes with a set of allowed access points. 
+  We need to assign it to an access point such that the density difference in the graphs is minimum. 
+
+# Objective is mandatory and can be min or max
+objective: min
+
+
+# Domains:
+# Each domain must have a name, used as a key in the yaml dictionary,
+# and a list of values. Type is optional and can be used to identify the kind
+# of value in the domain ('luminosity', 'color', etc.)
+# The values are expressed as a sequence of values and can be either 
+# given extensively like `[A, B, C]` or as a range like `[1 .. 10]`.
+# If all values in the domain can be interpreted as a int, the list is a
+# list of int, otherwise it is a list of strings. Booleans are also supported.
+# An optional initial value can also be given.
+domains: 
+  density: 
+    values: [0 .. 1000]
+    type: node_count
+    initial_value: 0
+  access_points:
+    values: [1 .. 10]
+    type: access_point_count
+    initial_value: 1
+
+# Variables
+# Note: variables must always be defined after the domains
+variables:
+  #Assuming that we know the mapping before hand for now. 
+  #Later this has to be converted into a Dynamic DCOP where devices can be added while the program is running. 
+
+  #Let there be 10 devices and 2 access points
+  dev1:
+    domain: access_points
+    allowed_points: [1]
+
+  dev2:
+    domain: access_points
+    allowed_points: [1,2]
+
+  dev3:
+    domain: access_points
+    allowed_points: [1,2]
+
+  dev4:
+    domain: access_points
+    allowed_points: [1]
+
+  dev5:
+    domain: access_points
+    allowed_points: [1,2]
+
+  dev6:
+    domain: access_points
+    allowed_points: [1]
+
+  dev7:
+    domain: access_points
+    allowed_points: [1,2]
+  
+  dev8:
+    domain: access_points
+    allowed_points: [1]
+
+  dev9:
+    domain: access_points
+    allowed_points: [1,2]
+
+  dev10:
+    domain: access_points
+    allowed_points: [1]
+
+  #If the mapping is done correctly, devices 1,4,6,8,10 should map to access point 1 and all the others should map to access point 2
+  # in order to minimize the density
+
+  access_point1:
+    domain: density
+    initial_value: 0
+  access_point2:
+    domain: density
+    initial_value: 0
+
+
+# Constraints
+constraints:
+  min_density_ap1: 
+    type: intention
+    function: |
+      b = 0
+      if dev1 == 1:
+        b = b+1;
+      if dev2 == 1:
+        b = b+1
+      if dev3 == 1:
+        b = b+1;
+      if dev4 == 1:
+        b = b+1
+      if dev5 == 1:
+        b = b+1;
+      if dev6 == 1:
+        b = b+1
+      if dev7 == 1:
+        b = b+1;
+      if dev8 == 1:
+        b = b+1
+      if dev9 == 1:
+        b = b+1;
+      if dev10 == 1:
+        b = b+1
+      return b;
+  
+  min_density_ap2:
+    type: intention
+    function: |
+      b = 0
+      if dev1 == 2:
+        b = b+1;
+      if dev2 == 2:
+        b = b+1
+      if dev3 == 2:
+        b = b+1;
+      if dev4 == 2:
+        b = b+1
+      if dev5 == 2:
+        b = b+1;
+      if dev6 == 2:
+        b = b+1
+      if dev7 == 2:
+        b = b+1;
+      if dev8 == 2:
+        b = b+1
+      if dev9 == 2:
+        b = b+1;
+      if dev10 == 2:
+        b = b+1
+      return b;
+ 
+
+agents: [a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12]

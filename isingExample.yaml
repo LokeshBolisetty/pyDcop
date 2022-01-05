@@ -1,0 +1,161 @@
+name: Ising_3_4_1.6_0.05
+objective: min
+
+domains:
+  var_domain:
+    type: binary
+    values:
+    - 0
+    - 1
+
+variables:
+  v_0_0:
+    domain: var_domain
+  v_0_1:
+    domain: var_domain
+  v_0_2:
+    domain: var_domain
+  v_0_3:
+    domain: var_domain
+  v_1_0:
+    domain: var_domain
+  v_1_1:
+    domain: var_domain
+  v_1_2:
+    domain: var_domain
+  v_1_3:
+    domain: var_domain
+  v_2_0:
+    domain: var_domain
+  v_2_1:
+    domain: var_domain
+  v_2_2:
+    domain: var_domain
+  v_2_3:
+    domain: var_domain
+
+constraints:
+  cb_v_0_0_v_0_1:
+    function: -0.21929193150979143 if v_0_0 == v_0_1 else --0.21929193150979143
+    type: intention
+  cb_v_0_0_v_0_3:
+    function: 1.027298937413366 if v_0_0 == v_0_3 else -1.027298937413366
+    type: intention
+  cb_v_0_0_v_1_0:
+    function: 1.5055873178708357 if v_0_0 == v_1_0 else -1.5055873178708357
+    type: intention
+  cb_v_0_0_v_2_0:
+    function: -0.36325579181082057 if v_0_0 == v_2_0 else --0.36325579181082057
+    type: intention
+  cb_v_0_1_v_0_2:
+    function: 1.2384788021563202 if v_0_1 == v_0_2 else -1.2384788021563202
+    type: intention
+  cb_v_0_1_v_1_1:
+    function: 0.22552043449445902 if v_0_1 == v_1_1 else -0.22552043449445902
+    type: intention
+  cb_v_0_1_v_2_1:
+    function: 1.5151377269309108 if v_0_1 == v_2_1 else -1.5151377269309108
+    type: intention
+  cb_v_0_2_v_0_3:
+    function: -1.540680573105384 if v_0_2 == v_0_3 else --1.540680573105384
+    type: intention
+  cb_v_0_2_v_1_2:
+    function: 0.03317674420341388 if v_0_2 == v_1_2 else -0.03317674420341388
+    type: intention
+  cb_v_0_2_v_2_2:
+    function: -0.9064591257128051 if v_0_2 == v_2_2 else --0.9064591257128051
+    type: intention
+  cb_v_0_3_v_1_3:
+    function: -0.9354376549438403 if v_0_3 == v_1_3 else --0.9354376549438403
+    type: intention
+  cb_v_0_3_v_2_3:
+    function: -0.3743658838769346 if v_0_3 == v_2_3 else --0.3743658838769346
+    type: intention
+  cb_v_1_0_v_1_1:
+    function: -1.477616395968398 if v_1_0 == v_1_1 else --1.477616395968398
+    type: intention
+  cb_v_1_0_v_1_3:
+    function: 0.8547750425738627 if v_1_0 == v_1_3 else -0.8547750425738627
+    type: intention
+  cb_v_1_0_v_2_0:
+    function: -0.5152833635264 if v_1_0 == v_2_0 else --0.5152833635264
+    type: intention
+  cb_v_1_1_v_1_2:
+    function: 0.55340030824842 if v_1_1 == v_1_2 else -0.55340030824842
+    type: intention
+  cb_v_1_1_v_2_1:
+    function: 1.1517272926910378 if v_1_1 == v_2_1 else -1.1517272926910378
+    type: intention
+  cb_v_1_2_v_1_3:
+    function: 0.6281128992859575 if v_1_2 == v_1_3 else -0.6281128992859575
+    type: intention
+  cb_v_1_2_v_2_2:
+    function: 1.5537845273162136 if v_1_2 == v_2_2 else -1.5537845273162136
+    type: intention
+  cb_v_1_3_v_2_3:
+    function: -1.1961992427841484 if v_1_3 == v_2_3 else --1.1961992427841484
+    type: intention
+  cb_v_2_0_v_2_1:
+    function: -1.3064236425502107 if v_2_0 == v_2_1 else --1.3064236425502107
+    type: intention
+  cb_v_2_0_v_2_3:
+    function: 1.0069955942227495 if v_2_0 == v_2_3 else -1.0069955942227495
+    type: intention
+  cb_v_2_1_v_2_2:
+    function: -0.06812596449898001 if v_2_1 == v_2_2 else --0.06812596449898001
+    type: intention
+  cb_v_2_2_v_2_3:
+    function: 0.28626755124605374 if v_2_2 == v_2_3 else -0.28626755124605374
+    type: intention
+  cu_v_0_0:
+    function: -0.030910811895347404 if v_0_0 == 1 else 0.030910811895347404
+    type: intention
+  cu_v_0_1:
+    function: --0.010908177810992105 if v_0_1 == 1 else -0.010908177810992105
+    type: intention
+  cu_v_0_2:
+    function: --0.04087906274669 if v_0_2 == 1 else -0.04087906274669
+    type: intention
+  cu_v_0_3:
+    function: -0.0031234779871735716 if v_0_3 == 1 else 0.0031234779871735716
+    type: intention
+  cu_v_1_0:
+    function: --0.016345751494917182 if v_1_0 == 1 else -0.016345751494917182
+    type: intention
+  cu_v_1_1:
+    function: -0.022371040687728133 if v_1_1 == 1 else 0.022371040687728133
+    type: intention
+  cu_v_1_2:
+    function: -0.005241446642575975 if v_1_2 == 1 else 0.005241446642575975
+    type: intention
+  cu_v_1_3:
+    function: --0.03698032376379652 if v_1_3 == 1 else -0.03698032376379652
+    type: intention
+  cu_v_2_0:
+    function: --0.0011560419343048176 if v_2_0 == 1 else -0.0011560419343048176
+    type: intention
+  cu_v_2_1:
+    function: --0.02863042649701443 if v_2_1 == 1 else -0.02863042649701443
+    type: intention
+  cu_v_2_2:
+    function: -0.008464504822913443 if v_2_2 == 1 else 0.008464504822913443
+    type: intention
+  cu_v_2_3:
+    function: -0.010791765304643763 if v_2_3 == 1 else 0.010791765304643763
+    type: intention
+
+agents:
+  a_0_0: {}
+  a_0_1: {}
+  a_0_2: {}
+  a_0_3: {}
+  a_1_0: {}
+  a_1_1: {}
+  a_1_2: {}
+  a_1_3: {}
+  a_2_0: {}
+  a_2_1: {}
+  a_2_2: {}
+  a_2_3: {}
+routes:
+  default: 1

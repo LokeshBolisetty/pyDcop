@@ -1,0 +1,139 @@
+
+# DCOP name is mandatory.
+name: 'Density based IoT optimization'
+# The desciption is optional and can span several lines if needed
+description: |
+  There can be multiple access points in an IoT system. 
+  When a new device enters the system, it comes with a set of allowed access points. 
+  We need to assign it to an access point such that the density difference in the graphs is minimum. 
+
+# Objective is mandatory and can be min or max
+objective: min
+
+
+# Domains:
+# Each domain must have a name, used as a key in the yaml dictionary,
+# and a list of values. Type is optional and can be used to identify the kind
+# of value in the domain ('luminosity', 'color', etc.)
+# The values are expressed as a sequence of values and can be either 
+# given extensively like `[A, B, C]` or as a range like `[1 .. 10]`.
+# If all values in the domain can be interpreted as a int, the list is a
+# list of int, otherwise it is a list of strings. Booleans are also supported.
+# An optional initial value can also be given.
+domains: 
+  density: 
+    values: [0 .. 1000]
+    type: node_count
+    initial_value: 0
+  access_points:
+    values: [1 .. 10]
+    type: access_point_count
+    initial_value: 1
+  one_two:
+    values: [1,2]
+  just_one:
+    values: [1 .. 1]
+  all:
+    values: [1 .. 3]
+  two_three:
+    values: [2,3]
+  
+
+# Variables
+# Note: variables must always be defined after the domains
+variables:
+  #Assuming that we know the mapping before hand for now. 
+  #Later this has to be converted into a Dynamic DCOP where devices can be added while the program is running. 
+
+  #Let there be 10 devices and 2 access points
+  dev1:
+    domain: two_three
+
+  dev2:
+    domain: one_two
+
+  dev3:
+    domain: just_one
+
+  dev4:
+    domain: two_three
+  dev5:
+    domain: just_one
+  dev6:
+    domain: just_one
+
+  #If the mapping is done correctly, devices 1,4,6,8,10 should map to access point 1 and all the others should map to access point 2
+  # in order to minimize the density
+
+  # access_point1:
+  #   domain: density
+  #   initial_value: 0
+  #   #cost_function: access_point1+1
+  # access_point2:
+  #   domain: density
+  #   initial_value: 0
+  #   #cost_function: access_point2+1
+
+
+# Constraints
+constraints:
+  min_density_ap1: 
+    type: intention
+    function: |
+      a = 0
+      b = 0
+      c = 0
+      if dev1 == 1:
+        a = a+1
+      elif dev1==2:
+        b = b+1
+      else: 
+        c = c+1
+      if dev2 == 1:
+        a = a+1
+      elif dev2==2:
+        b = b+1
+      else: 
+        c = c+1
+      if dev3 == 1:
+        a = a+1
+      elif dev3 == 2:
+        b = b+1
+      else: 
+        c = c+1
+      if dev4 == 1:
+        a = a +1
+      elif dev4 == 2:
+        b = b + 1
+      else: 
+        c = c+1
+      if dev5 == 1:
+        b = b+1
+      elif dev5 == 2:
+        b = b+2
+      else:
+        c = c+1
+      if dev6 == 1:
+        a = a+1
+      elif dev6 == 2:
+        b = b+2
+      else: 
+        c = c+1
+      return abs(1-(a+b+c)/(3*(a*a+b*b+c*c))**0.5);
+  
+  # min_density_ap2:
+  #   type: intention
+  #   function: |
+  #     y = 0
+  #     if dev1 == 2:
+  #       y = y+1
+  #     if dev2 == 2:
+  #       y = y+1
+  #     if dev3 == 2:
+  #       y = y+1
+  #     if dev4 == 2:
+  #       y = y+1
+  #     return y;
+ 
+
+agents: [a1,a2,a3,a4,ap1,ap2]
