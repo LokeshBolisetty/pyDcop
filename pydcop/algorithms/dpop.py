@@ -200,6 +200,7 @@ class DpopAlgo(VariableComputation):
         self.logger.debug(
             f"Constraints for computation {self.name}: {self._constraints} "
         )
+        # print(f"Constraints for computation {self.name}: {self._constraints}")
 
         if hasattr(self._variable, "cost_for_val"):
             costs = []

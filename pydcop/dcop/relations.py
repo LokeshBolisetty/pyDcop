@@ -1290,13 +1290,17 @@ def constraint_from_str(name: str, expression: str, all_variables: Iterable[Vari
 
     :return: a relation object whose function implements the expression
     """
+    for variable in all_variables:
+        expression = variable.name + "\n" + expression
     f_exp = ExpressionFunction(expression)
+    #print(expression)
     relation_variables = []
+    found = False
+    for s in all_variables:
+        relation_variables.append(s)
     for v in f_exp.variable_names:
-        found = False
-        for s in all_variables:
+        for s in relation_variables:
             if s.name == v:
-                relation_variables.append(s)
                 found = True
         if not found:
             raise Exception(

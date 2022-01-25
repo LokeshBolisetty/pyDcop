@@ -70,7 +70,7 @@ class ExpressionFunction(Callable, SimpleRepr):
         self._expression = expression.lstrip()
         self._fixed_vars = fixed_vars
         self._source_file = source_file
-
+        #print(self._expression) Expresssion is the actual code that we write
         has_return, self.exp_vars = _analyse_ast(self._expression)
 
         # Build the function definition code from the expression:
@@ -83,6 +83,7 @@ class ExpressionFunction(Callable, SimpleRepr):
                 else self._expression
             f_def += self._expression.replace("\n", "\n    ")
         try:
+            #print(f_def) f_def is the expression after adding the function definition f(variables): <expression we wrote>
             f_compiled = compile(f_def, '<string>', 'exec')
         except SyntaxError:
             raise SyntaxError(f"Syntax error in string expression: '{self._expression}'")
@@ -127,8 +128,8 @@ class ExpressionFunction(Callable, SimpleRepr):
     def partial(self, **kwargs):
         return ExpressionFunction(self.expression, **kwargs)
 
-    def __call__(self, **kwargs):
-        # Note that we only accept named arguments !
+    def __call__(self, **kwargs):   
+        # Note that we only accept named arguments ! 
         l = kwargs.copy()
         l.update(self._fixed_vars)
 
