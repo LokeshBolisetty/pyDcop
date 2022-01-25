@@ -138,9 +138,25 @@ def _yaml_domains(domains):
         d_dict[domain.name] = {"values": list(domain.values), "type": domain.type}
     return yaml.dump({"domains": d_dict})  #  , default_flow_style=False)
 
+#Create a function to check if atleast one variable has domain restriction
+def _domain_restriction_check(loaded):
+    if "variables" in loaded:
+        for variable in loaded["variables"]:
+            if loaded['variables'][variable]['domain_restriction'] is not None:
+                return True
+    return False
 
 def _build_domains(loaded) -> Dict[str, VariableDomain]:
     domains = {}
+    # loaded is the entire yaml file in the form a dict where the keys are name, description, domains, variables etc.
+    if _domain_restriction_check(loaded):
+        for variable in loaded["variables"]:
+            d = variable+"_domain"
+            values = loaded["variables"][variable]['domain_restriction']
+            if len(values) == 1 and ".." in values[0]:
+                values = str_2_domain_values(loaded["variables"][variable]['domain_restriction'][0])
+            d_type = loaded["variables"][variable]['domain']
+            domains[d] = VariableDomain(d, d_type, values)
     if "domains" in loaded:
         for d_name in loaded["domains"]:
             d = loaded["domains"][d_name]
@@ -169,14 +185,20 @@ def _build_variables(loaded, dcop) -> Dict[str, Variable]:
     if "variables" in loaded:
         for v_name in loaded["variables"]:
             v = loaded["variables"][v_name]
-            domain = dcop.domain(v["domain"])
+            restrictedDomain = v_name + "_domain"
+            if dcop.domain(restrictedDomain) is not None:
+                domain = dcop.domain(restrictedDomain)
+            else:
+                domain = dcop.domain(v["domain"])
+
             initial_value = v["initial_value"] if "initial_value" in v else None
+            
             if initial_value and initial_value not in domain.values:
                 raise ValueError(
                     "initial value {} is not in the domain {} "
                     "of the variable {}".format(initial_value, domain.name, v_name)
                 )
-
+            
             if "cost_function" in v:
                 cost_expression = v["cost_function"]
                 cost_func = ExpressionFunction(cost_expression)
@@ -203,7 +225,12 @@ def _build_external_variables(loaded, dcop) -> Dict[str, ExternalVariable]:
     if "external_variables" in loaded:
         for v_name in loaded["external_variables"]:
             v = loaded["external_variables"][v_name]
-            domain = dcop.domain(v["domain"])
+            restrictedDomain = v_name + "_domain"
+            if dcop.domain(restrictedDomain) is not None:
+                domain = dcop.domain(restrictedDomain)
+            else:
+                domain = dcop.domain(v["domain"])
+                
             initial_value = v["initial_value"] if "initial_value" in v else None
             if initial_value and initial_value not in domain.values:
                 raise ValueError(

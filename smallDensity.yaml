@@ -47,20 +47,24 @@ variables:
 
   #Let there be 10 devices and 2 access points
   dev1:
-    domain: two_three
-
+    domain: density
+    initial_value: 2
+    domain_restriction : [2,3]
   dev2:
-    domain: one_two
-
+    domain: density
+    domain_restriction: [1,2]
   dev3:
-    domain: just_one
-
+    domain: density
+    domain_restriction: [1 .. 1]
   dev4:
-    domain: two_three
+    domain: density
+    domain_restriction: [2,3]
   dev5:
-    domain: just_one
+    domain: density
+    domain_restriction: [1 .. 1]
   dev6:
-    domain: just_one
+    domain: density
+    domain_restriction: [1 .. 1]
 
   #If the mapping is done correctly, devices 1,4,6,8,10 should map to access point 1 and all the others should map to access point 2
   # in order to minimize the density
