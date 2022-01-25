@@ -152,7 +152,10 @@ def _build_domains(loaded) -> Dict[str, VariableDomain]:
     if _domain_restriction_check(loaded):
         for variable in loaded["variables"]:
             d = variable+"_domain"
-            values = loaded["variables"][variable]['domain_restriction']
+            try:
+                values = loaded["variables"][variable]['domain_restriction']
+            except:
+                continue
             if len(values) == 1 and ".." in values[0]:
                 values = str_2_domain_values(loaded["variables"][variable]['domain_restriction'][0])
             d_type = loaded["variables"][variable]['domain']
@@ -186,9 +189,10 @@ def _build_variables(loaded, dcop) -> Dict[str, Variable]:
         for v_name in loaded["variables"]:
             v = loaded["variables"][v_name]
             restrictedDomain = v_name + "_domain"
-            if dcop.domain(restrictedDomain) is not None:
-                domain = dcop.domain(restrictedDomain)
-            else:
+            try:
+                if dcop.domain(restrictedDomain) is not None:
+                    domain = dcop.domain(restrictedDomain)
+            except:
                 domain = dcop.domain(v["domain"])
 
             initial_value = v["initial_value"] if "initial_value" in v else None
