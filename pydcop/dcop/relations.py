@@ -36,7 +36,7 @@ from copy import deepcopy
 import numpy as np
 from typing import Dict, Iterable, Any, Tuple, Callable, List, Union
 
-from pydcop.dcop.objects import Variable
+from pydcop.dcop.objects import ExternalVariable, Variable
 from pydcop.utils.simple_repr import SimpleRepr
 from pydcop.utils.various import func_args
 from pydcop.utils.expressionfunction import ExpressionFunction
@@ -533,7 +533,11 @@ class NAryFunctionRelation(AbstractBaseRelation, SimpleRepr):
                 self._var_mapping = {v.name: v.name for v in variables}
 
         else:
-            self._var_mapping = {v.name: v.name for v in variables}
+            #self._var_mapping = {v.name: v.name for v in variables}
+            for v in variables:
+                self._var_mapping[v.name] = v.name
+                self._var_mapping[v.name +"_time_required"] = v.name +"_time_required"
+                self._var_mapping[v.name +"_location"] = v.name + "_location"
 
     @property
     def expression(self):
@@ -589,7 +593,8 @@ class NAryFunctionRelation(AbstractBaseRelation, SimpleRepr):
         )
 
     def get_value_for_assignment(self, assignment):
-
+        
+        #Not sure how to implement the _location and _time_required parameters in this
         if isinstance(assignment, list):
             args_dict = {}
             for i in range(len(assignment)):
@@ -599,9 +604,16 @@ class NAryFunctionRelation(AbstractBaseRelation, SimpleRepr):
 
         elif isinstance(assignment, dict):
             args_dict = {}
+            #print(assignment)
+            propDict = dict()
+            for variable in self._variables:
+                propDict[variable.name + "_time_required"] = variable.time_required
+                propDict[variable.name + "_location"] = variable.location
             for var_name in assignment:
                 arg_name = self._var_mapping[var_name]
                 args_dict[arg_name] = assignment[var_name]
+                args_dict[arg_name+"_time_required"] =propDict[arg_name+"_time_required"]
+                args_dict[arg_name+"_location"] = propDict[arg_name+"_location"]
             return self._f(**args_dict)
 
         else:
@@ -1271,7 +1283,7 @@ def is_compatible(assignment1: Dict[str, Any], assignment2: Dict[str, Any]):
             return False
     return True
 
-
+### IMPORTANT
 def constraint_from_str(name: str, expression: str, all_variables: Iterable[Variable]):
     """
     Generate a relation object from a string expression and a list of
@@ -1290,15 +1302,19 @@ def constraint_from_str(name: str, expression: str, all_variables: Iterable[Vari
 
     :return: a relation object whose function implements the expression
     """
+    expression = '\n' + expression
     for variable in all_variables:
-        expression = variable.name + "\n" + expression
+        expression = variable.name + ";" + variable.name + "_time_required"+ ";" + variable.name +"_location" + ";" + expression
+
     f_exp = ExpressionFunction(expression)
-    #print(expression)
     relation_variables = []
     found = False
     for s in all_variables:
         relation_variables.append(s)
     for v in f_exp.variable_names:
+        # if v ends with '_time_required', continue
+        if v.endswith('_time_required') or v.endswith('_location'):
+            continue
         for s in relation_variables:
             if s.name == v:
                 found = True
@@ -1749,12 +1765,8 @@ def projection(a_rel: Constraint, a_var: Variable, mode="max") -> Constraint:
     remaining_vars = a_rel.dimensions.copy()
     remaining_vars.remove(a_var)
 
-    # the new relation resulting from the projection
     proj_rel = NAryMatrixRelation(remaining_vars)
-
     for partial in generate_assignment_as_dict(remaining_vars):
-
         _, rel_val = find_arg_optimal(a_var, a_rel.slice(partial), mode)
         proj_rel = proj_rel.set_value_for_assignment(partial, rel_val)
-
     return proj_rel

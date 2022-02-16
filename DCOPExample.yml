@@ -49,7 +49,7 @@ variables:
     
   var2:
     domain : d2
-    initial_value: 0
+    initial_value: 'A'
   var3:
     domain : d1
     initial_value: 0
@@ -60,7 +60,7 @@ variables:
     cost_function: var3 * 0.5 
   var4:
     domain : d3
-    initial_value: 0
+    initial_value: 2
     cost_function: var4 * 0.6   
     # When noise_level is used, some noise will be added to the cost generated
     # by the cost function. The value of noise_level represents the maximum 

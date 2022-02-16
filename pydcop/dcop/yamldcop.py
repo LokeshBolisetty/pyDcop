@@ -142,8 +142,13 @@ def _yaml_domains(domains):
 def _domain_restriction_check(loaded):
     if "variables" in loaded:
         for variable in loaded["variables"]:
-            if loaded['variables'][variable]['domain_restriction'] is not None:
+            try:
+                loaded['variables'][variable]['domain_restriction']
                 return True
+            except:
+                continue
+            # if loaded['variables'][variable]['domain_restriction'] is not None:
+            #     return True
     return False
 
 def _build_domains(loaded) -> Dict[str, VariableDomain]:
@@ -179,7 +184,6 @@ def _yaml_variables(variables):
         var_dict[v.name] = {"domain": v.domain.name}
         if v.initial_value is not None:
             var_dict[v.name]["initial_value"] = v.initial_value
-
     return yaml.dump({"variables": var_dict}, default_flow_style=False)
 
 
@@ -197,6 +201,10 @@ def _build_variables(loaded, dcop) -> Dict[str, Variable]:
 
             initial_value = v["initial_value"] if "initial_value" in v else None
             
+            time_required = v["time_required"] if "time_required" in v else 0
+
+            location = v["location"] if "location" in v else (0,0)
+
             if initial_value and initial_value not in domain.values:
                 raise ValueError(
                     "initial value {} is not in the domain {} "
@@ -220,20 +228,28 @@ def _build_variables(loaded, dcop) -> Dict[str, Variable]:
                     )
 
             else:
-                variables[v_name] = Variable(v_name, domain, initial_value)
+                variables[v_name] = Variable(v_name, domain, initial_value,time_required,location)
     return variables
 
 
 def _build_external_variables(loaded, dcop) -> Dict[str, ExternalVariable]:
     ext_vars = {}
-    if "external_variables" in loaded:
+
+    if "external_variables" in loaded and loaded['external_variables']:
         for v_name in loaded["external_variables"]:
             v = loaded["external_variables"][v_name]
             restrictedDomain = v_name + "_domain"
-            if dcop.domain(restrictedDomain) is not None:
+            #The code for dcop.domain(restrictedDomain) in dcop.py is written such that if 
+            #requested Domain is not present, then it returns a key error. 
+            #Therefore, here we should use try except blocks
+            try:
                 domain = dcop.domain(restrictedDomain)
-            else:
-                domain = dcop.domain(v["domain"])
+            except:
+                domain = dcop.domain(v['domain'])
+            # if dcop.domain(restrictedDomain) is not None:
+            #     domain = dcop.domain(restrictedDomain)
+            # else:
+            #     domain = dcop.domain(v["domain"])
                 
             initial_value = v["initial_value"] if "initial_value" in v else None
             if initial_value and initial_value not in domain.values:

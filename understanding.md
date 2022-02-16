@@ -180,3 +180,9 @@ pydcop run --algo <algo> [--algo_params <params>]
                --scenario <scenario_file>
                <dcop_files>
 ```
+
+## To add a new field in the variables
+1. Add property to the Variable class in object.py and to others like ExternalVariables if required
+2. Add the fields in _build_variables in yamldcop.py
+3. Add mapping in NAryFunctionRelation in relations.py. Inside NAryFunctionRelation, in get_value_for_instace, add the values for the newly added properties also. 
+4. Supass the "Missing Variable" check in constraint_from_str function in relations.py

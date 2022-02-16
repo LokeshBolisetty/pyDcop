@@ -171,7 +171,11 @@ VariableDomain = Domain
 
 binary_domain = Domain("binary", "binary", [0, 1])
 
+### NOTE THAT WE MODIFIED ONLY THE VARIABLE AND BINARYVARIABLE. OTHER KINDS OF VARIABLES LIKE AGENTVARIABLE, VARIABLE WITH COST ETC. 
+### ARE NOT MODIFIED. IN CASE WE NEED TO IMPLEMENT TIMINGS FOR THEM, WE NEED TO MODIFY THEM TOO. 
 
+#We will change the Variable to also include the total execution time for our cost function. 
+#time_required is the total execution time required. 
 class Variable(SimpleRepr):
     """A DCOP variable.
 
@@ -197,7 +201,7 @@ class Variable(SimpleRepr):
     has_cost = False
 
     def __init__(
-        self, name: str, domain: Union[Domain, Iterable[Any]], initial_value=None
+        self, name: str, domain: Union[Domain, Iterable[Any]], initial_value=None, time_required = None, location = (0,0)
     ) -> None:
         self._name = name
         # If the domain has no name, simply use a named derived from the
@@ -211,10 +215,12 @@ class Variable(SimpleRepr):
         self._domain = domain
         if initial_value is not None and initial_value not in self.domain.values:
             raise ValueError(
-                "Invalid initial value {}, not in domain values"
-                " {}".format(initial_value, self.domain.values)
+                "Invalid initial value {}, not in domain values of {}"
+                " {}".format(initial_value, self.domain.values, self.name)
             )
         self._initial_value = initial_value
+        self._time_required = time_required
+        self._location = location
 
     @property
     def name(self) -> str:
@@ -228,6 +234,14 @@ class Variable(SimpleRepr):
     def initial_value(self):
         return self._initial_value
 
+    @property
+    def time_required(self):
+        return self._time_required
+
+    @property
+    def location(self):
+        return self._location
+
     def cost_for_val(self, val) -> float:
         return 0
 
@@ -235,7 +249,7 @@ class Variable(SimpleRepr):
         return "Variable({})".format(self.name)
 
     def __repr__(self):
-        return "Variable({}, {}, {})".format(self.name, self.initial_value, self.domain)
+        return "Variable({}, {}, {}, {}, {})".format(self.name, self.initial_value, self.domain, self.time_required,self._location)
 
     def __eq__(self, other):
         if type(self) != type(other):
@@ -244,15 +258,18 @@ class Variable(SimpleRepr):
             self.name == other.name
             and self.initial_value == other.initial_value
             and self.domain == other.domain
+            and self.time_required == other.time_required
+            and self.location == other.location
         ):
             return True
         return False
 
     def __hash__(self):
-        return hash((self._name, self._domain, self._initial_value))
+        #print("The type of time_required is {} and that of location is {}".format(type(self._time_required),type(self._location)))
+        return hash((self._name, self._domain, self._initial_value, self._time_required, self._location))
 
     def clone(self):
-        return Variable(self.name, self.domain, initial_value=self.initial_value)
+        return Variable(self.name, self.domain, initial_value=self.initial_value, time_required = self.time_required, location = self.location)
 
 
 def create_variables(
@@ -333,17 +350,17 @@ def create_variables(
 
 
 class BinaryVariable(Variable):
-    def __init__(self, name: str, initial_value=0) -> None:
-        super().__init__(name, binary_domain, initial_value)
+    def __init__(self, name: str, initial_value=0,time_required=None,location=(0,0)) -> None:
+        super().__init__(name, binary_domain, initial_value,time_required,location)
 
     def __str__(self):
         return "BinaryVariable({})".format(self.name)
 
     def __repr__(self):
-        return "BinaryVariable({}, {})".format(self.name, self.initial_value)
+        return "BinaryVariable({}, {}, {}, {})".format(self.name, self.initial_value, self.time_required,self.location)
 
     def clone(self):
-        return BinaryVariable(self.name, initial_value=self.initial_value)
+        return BinaryVariable(self.name, initial_value=self.initial_value, time_required = self.time_required, location = self.location)
 
 
 def create_binary_variables(
@@ -416,6 +433,8 @@ class VariableWithCostDict(Variable):
         domain: Union[VariableDomain, Iterable[Any]],
         costs: Dict[Any, float],
         initial_value=None,
+        time_required = 0,
+        location = (0,0)
     ) -> None:
         """
         :param name: The name of the variable
@@ -423,7 +442,7 @@ class VariableWithCostDict(Variable):
         :param costs: a dict that associates a cost for each value in domain
         :param initial_value: optional, if given must be in the domain
         """
-        super().__init__(name, domain, initial_value)
+        super().__init__(name, domain, initial_value,time_required,location)
         self._costs = costs
 
     def cost_for_val(self, val) -> float:
@@ -436,8 +455,8 @@ class VariableWithCostDict(Variable):
         return "VariableWithCostDict({})".format(self.name)
 
     def __repr__(self):
-        return "VariableWithCostDict" "({}, {}, {}, {})".format(
-            self.name, self.initial_value, self.domain, self._costs
+        return "VariableWithCostDict" "({}, {}, {}, {}, {}, {})".format(
+            self.name, self.initial_value, self.domain, self._costs,self._time_required,self._location
         )
 
     def __eq__(self, other):
@@ -448,6 +467,8 @@ class VariableWithCostDict(Variable):
             and self.initial_value == other.initial_value
             and self.domain == other.domain
             and self._costs == other._costs
+            and self._location == other._location
+            and self._time_required == other._time_required
         ):
             return True
         return False
@@ -457,10 +478,10 @@ class VariableWithCostDict(Variable):
 
     def clone(self):
         return VariableWithCostDict(
-            self.name, self.domain, self._costs, initial_value=self.initial_value
+            self.name, self.domain, self._costs, initial_value=self.initial_value, time_required=self._time_required, location=self._location
         )
 
-
+### THERE IS SOME ISSUE HERE. ONLY SIMPLE VARIABLES ARE WORKING. OTHERS ARE NOT
 class VariableWithCostFunc(Variable):
     has_cost = True
 
@@ -470,6 +491,8 @@ class VariableWithCostFunc(Variable):
         domain: Union[VariableDomain, Iterable[Any]],
         cost_func: Union[Callable[..., float], ExpressionFunction],
         initial_value: Any = None,
+        time_required = 0,
+        location = (0,0)
     ) -> None:
         """
         :param name: The name of the variable
@@ -478,7 +501,7 @@ class VariableWithCostFunc(Variable):
         domain.
         :param initial_value: optional, if given must be in the domain
         """
-        super().__init__(name, domain, initial_value)
+        super().__init__(name, domain, initial_value,time_required,location)
         if hasattr(cost_func, "variable_names"):
             # Specific corner case when using an ExpressionFunction as a
             # cost_func: check arguments
@@ -506,8 +529,8 @@ class VariableWithCostFunc(Variable):
         return "VariableWithCostFunc({})".format(self.name)
 
     def __repr__(self):
-        return "VariableWithCostFunc" "({}, {}, {}, {})".format(
-            self.name, self.initial_value, self.domain, self._cost_func
+        return "VariableWithCostFunc" "({}, {}, {}, {}, {}, {})".format(
+            self.name, self.initial_value, self.domain, self._cost_func, self._time_required, self._location
         )
 
     def __eq__(self, other):
@@ -517,6 +540,8 @@ class VariableWithCostFunc(Variable):
             self.name == other.name
             and self.initial_value == other.initial_value
             and self.domain == other.domain
+            and self.time_required == other.time_required
+            and self.location == other.location
         ):
             if [self.cost_for_val(v) for v in self.domain] == [
                 other.cost_for_val(v) for v in other.domain
@@ -530,7 +555,7 @@ class VariableWithCostFunc(Variable):
 
     def clone(self):
         return VariableWithCostFunc(
-            self.name, self.domain, self._cost_func, initial_value=self._initial_value
+            self.name, self.domain, self._cost_func, initial_value=self._initial_value, time_required = self._time_required,location = self._location
         )
 
     def _simple_repr(self):
@@ -630,12 +655,14 @@ class ExternalVariable(Variable):
     """
 
     def __init__(
-        self, name: str, domain: Union[VariableDomain, Iterable[Any]], value=None
+        self, name: str, domain: Union[VariableDomain, Iterable[Any]], value=None,time_required = 0, location = (0,0)
     ) -> None:
         super().__init__(name, domain)
         self._cb = []  # type: List[Callable[[Any], Any]]
         self._value = list(domain.values)[0]
         self.value = value
+        self._time_required = time_required
+        self._location = location
 
     @property
     def value(self):

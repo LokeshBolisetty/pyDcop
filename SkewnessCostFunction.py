@@ -18,7 +18,7 @@ for device in range(devicesCount):
     #print(locals()[devName])
     connections[locals()[devName]-1] = connections[locals()[devName]-1]+1
 print(connections)
-dev1
+
 sum = 0
 squareSum = 0
 for i in range(accessPoints):
