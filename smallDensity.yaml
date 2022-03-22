@@ -199,4 +199,28 @@ constraints:
       return totalDistance
 
 
-agents: [a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,ap1,ap2,a12,a14,a15,a9,a10,a11]
+agents:
+  a1: 
+    capacity: 100
+  a2:
+    capacity: 100
+  a3:
+    capacity: 100
+  a4:
+    capacity: 100
+  a5:
+    capacity: 100
+  a6:
+    capacity: 100
+  a7:
+    capacity: 100
+  a8:
+    capacity: 100
+  a9:
+    capacity: 100
+  a10:
+    capacity: 100
+  a11:
+    capacity: 100
+
+#[a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,ap1,ap2,a12,a14,a15,a9,a10,a11]

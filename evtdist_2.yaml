@@ -1,0 +1,34 @@
+communication_cost: 0
+cost: 0.0
+distribution:
+  a1: []
+  a11: []
+  a2: []
+  a3: []
+  a5: []
+  a6:
+  - apt2
+  - apt4
+  - dev3
+  - dev9
+  - dev4
+  - dev2
+  - apt1
+  - dev6
+  - dev7
+  - apt3
+  - dev5
+  - accessPoints
+  - dev10
+  - dev8
+  - devicesCount
+  - dev1
+  a7: []
+  a8: []
+  a9: []
+duration: 0
+hosting_cost: 0
+inputs:
+  dist_algo: repair
+metrics: {}
+status: OK
